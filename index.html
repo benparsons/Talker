@@ -1,11 +1,26 @@
 <html>
 <script>
+var sample = "The quick brown fox jumped over the lazy dog";
+var words = sample.split(' ');
 var synth = window.speechSynthesis;
 var utterance = new SpeechSynthesisUtterance();
 utterance.text = "hello";
 var voices = window.speechSynthesis.getVoices();
-utterance.onend = function(a) { console.log(a)};
+utterance.onend = function(a) {
+  i++;
+  console.log(a);
+  if (words[i]) {
+    sayNextWord(words[i]);
+  }
+};
 utterance.voice = voices[5];
-synth.speak(utterance);
+var i = 0;
+
+function sayNextWord(word) {
+  utterance.text = word;
+  synth.speak(utterance);
+}
+
+sayNextWord(words[0]);
 </script>
 </html>
