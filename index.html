@@ -5,7 +5,10 @@ var words = sample.split(' ');
 var synth = window.speechSynthesis;
 var utterance = new SpeechSynthesisUtterance();
 utterance.text = "hello";
-var voices = window.speechSynthesis.getVoices();
+var voices = [];
+window.speechSynthesis.onvoiceschanged = function() {
+    voices = window.speechSynthesis.getVoices();
+}
 utterance.onend = function(a) {
   i++;
   console.log(a);
@@ -13,14 +16,21 @@ utterance.onend = function(a) {
     sayNextWord(words[i]);
   }
 };
-utterance.voice = voices[5];
 var i = 0;
 
 function sayNextWord(word) {
   utterance.text = word;
+  utterance.voice = voices[getRandomInt(0, voices.length)];
   synth.speak(utterance);
 }
 
 sayNextWord(words[0]);
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 </script>
 </html>
