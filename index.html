@@ -1,17 +1,24 @@
 <html>
 <script>
-var sample = "The quick brown fox jumped over the lazy dog";
+//var sample = "The quick brown fox jumped over the lazy dog";
+var sample = "My fellow Americans, Michelle and I have been so touched by all the well-wishes that we've received over the past few weeks. But tonight it's my turn to say thanks.";
 var words = sample.split(' ');
 var synth = window.speechSynthesis;
 var utterance = new SpeechSynthesisUtterance();
 utterance.text = "hello";
 var voices = [];
 window.speechSynthesis.onvoiceschanged = function() {
-    voices = window.speechSynthesis.getVoices();
+    for (voice_index in window.speechSynthesis.getVoices()) {
+      if (window.speechSynthesis.getVoices()[voice_index].lang.indexOf("en") === 0) {
+        voices.push(window.speechSynthesis.getVoices()[voice_index]);
+      }
+    }
+
+    sayNextWord(words[0]);
 }
 utterance.onend = function(a) {
   i++;
-  console.log(a);
+  //console.log(a);
   if (words[i]) {
     sayNextWord(words[i]);
   }
@@ -22,9 +29,8 @@ function sayNextWord(word) {
   utterance.text = word;
   utterance.voice = voices[getRandomInt(0, voices.length)];
   synth.speak(utterance);
+  console.log("word: " + utterance.text + "; voice: " + utterance.voice.name);
 }
-
-sayNextWord(words[0]);
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
