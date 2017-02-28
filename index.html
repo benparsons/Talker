@@ -1,0 +1,11 @@
+<html>
+<script>
+var synth = window.speechSynthesis;
+var utterance = new SpeechSynthesisUtterance();
+utterance.text = "hello";
+var voices = window.speechSynthesis.getVoices();
+utterance.onend = function(a) { console.log(a)};
+utterance.voice = voices[5];
+synth.speak(utterance);
+</script>
+</html>
