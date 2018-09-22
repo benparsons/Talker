@@ -2,19 +2,19 @@
 <script>
 //var sample = "The quick brown fox jumped over the lazy dog";
 var sample = "My fellow Americans, Michelle and I have been so touched by all the well-wishes that we've received over the past few weeks. But tonight it's my turn to say thanks.";
+//var sample = "My fellow Americans."
 var words = sample.split(' ');
 var synth = window.speechSynthesis;
 var utterance = new SpeechSynthesisUtterance();
 utterance.text = "hello";
 var voices = [];
 window.speechSynthesis.onvoiceschanged = function() {
+  console.log("onvoiceschanged");
     for (voice_index in window.speechSynthesis.getVoices()) {
       if (window.speechSynthesis.getVoices()[voice_index].lang.indexOf("en") === 0) {
         voices.push(window.speechSynthesis.getVoices()[voice_index]);
       }
     }
-
-    sayNextWord(words[0]);
 }
 utterance.onend = function(a) {
   i++;
@@ -24,6 +24,15 @@ utterance.onend = function(a) {
   }
 };
 var i = 0;
+start();
+function start() {
+  console.log("start()");
+  if (voices.length===0) {
+    setTimeout(start, 200);
+  } else {
+    sayNextWord(words[i]);
+  }
+}
 
 function sayNextWord(word) {
   utterance.text = word;
