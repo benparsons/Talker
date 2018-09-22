@@ -1,0 +1,77 @@
+<html>
+<script>
+var dialog = [
+    { "part": "Nicola", "line": "Malcolm." },
+    { "part": "Malcolm", "line": "Hey Nicola! How are you doing?" },
+    { "part": "Nicola", "line": "You're back." },
+    { "part": "Malcolm", "line": "Yeah I'm just, you know, tying up a few loose ends." },
+    { "part": "Nicola", "line": "With which you're going to plait some kind of garotte and strangle me." },
+    { "part": "Malcolm", "line": "Forgive and forget. That's my motto."}
+];
+var multiple = [
+    { "part": "Joe", "line": " This man set us up." },
+    { "part": "Nice Guy Eddie", "line": " Dad, I'm sorry, but I don't know what the hell's happening." },
+    { "part": "Joe", "line": " It's all right, Eddie. I do." },
+    { "part": "Mr. White", "line": " What the fuck are you talking about?" },
+    { "part": "Joe", "line": " That lump of shit's working with the L.A.P.D." },
+    { "part": "Mr. Orange", "line": " Joe, I don't have the slightest fucking idea what you're talking about." },
+    { "part": "Mr. White", "line": " Joe, I don't know what you think you know, but you're wrong." },
+    { "part": "Joe", "line": " Like hell I am." }
+];
+
+var script = multiple;
+var synth = window.speechSynthesis;
+var utterance = new SpeechSynthesisUtterance();
+utterance.text = "hello";
+var voices = [];
+window.speechSynthesis.onvoiceschanged = function() {
+  console.log("onvoiceschanged");
+    for (voice_index in window.speechSynthesis.getVoices()) {
+      if (window.speechSynthesis.getVoices()[voice_index].lang.indexOf("en") === 0) {
+        voices.push(window.speechSynthesis.getVoices()[voice_index]);
+      }
+    }
+}
+utterance.onend = function(a) {
+  i++;
+  //console.log(a);
+  if (script[i]) {
+    sayNextLine(i);
+  }
+};
+var i = 0;
+start();
+function start() {
+  console.log("start()");
+  if (voices.length===0) {
+    setTimeout(start, 200);
+  } else {
+    configureParts();
+    sayNextLine(i);
+  }
+}
+
+var parts = {};
+function configureParts() {
+  script.forEach(line => {
+    if (!parts[line.part]) { 
+      parts[line.part] = voices[getRandomInt(0, voices.length)];
+    }
+  });
+}
+
+function sayNextLine(i) {
+  utterance.text = script[i].line;
+  utterance.voice = parts[script[i].part];
+  synth.speak(utterance);
+  console.log("word: " + utterance.text + "; voice: " + utterance.voice.name);
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+</script>
+</html>
